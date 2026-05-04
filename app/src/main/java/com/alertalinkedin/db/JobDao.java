@@ -7,9 +7,12 @@ import androidx.room.Query;
 
 @Dao
 public interface JobDao {
-    @Query("SELECT COUNT(*) FROM seen_jobs WHERE id = :jobId")
-    int exists(String jobId);
+    @Query("SELECT EXISTS(SELECT 1 FROM seen_jobs WHERE id = :jobId)")
+    boolean exists(String jobId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(JobEntity job);
+
+    @Query("DELETE FROM seen_jobs WHERE foundAt < :timestamp")
+    void deleteOlderThan(long timestamp);
 }

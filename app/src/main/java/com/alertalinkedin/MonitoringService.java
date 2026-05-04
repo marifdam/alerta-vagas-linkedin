@@ -81,6 +81,11 @@ public class MonitoringService extends Service {
 
     private void checkJobs() {
         AppDatabase db = AppDatabase.getInstance(this);
+        
+        // Limpeza semanal: remove registros com mais de 7 dias
+        long sevenDaysAgo = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000L);
+        db.jobDao().deleteOlderThan(sevenDaysAgo);
+
         List<KeywordEntity> keywords = db.keywordDao().getAllSync();
         if (keywords.isEmpty()) return;
 
@@ -94,7 +99,7 @@ public class MonitoringService extends Service {
             for (Job job : jobs) {
                 if (isJobTooOld(job.getTimeAgo(), timeRange)) continue;
 
-                if (db.jobDao().exists(job.getId()) == 0) {
+                if (!db.jobDao().exists(job.getId())) {
                     db.jobDao().insert(new JobEntity(
                         job.getId(), job.getTitle(), job.getCompany(),
                         job.getLocation(), job.getUrl(), job.getKeyword()
@@ -132,13 +137,6 @@ public class MonitoringService extends Service {
             }
             return lower.contains("mês") || lower.contains("mes") || lower.contains("month") ||
                    lower.contains("ano") || lower.contains("year");
-        }
-        if (timeRange.equals("r2592000")) { // 1 mês
-            if (lower.contains("mês") || lower.contains("mes") || lower.contains("month")) {
-                // "2 meses" ou mais é antigo
-                return !lower.startsWith("1") && !lower.contains(" 1 ");
-            }
-            return lower.contains("ano") || lower.contains("year");
         }
         return false;
     }

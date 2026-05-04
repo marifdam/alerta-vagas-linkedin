@@ -6,14 +6,12 @@
         <item>Última hora</item>
         <item>Último dia</item>
         <item>Última semana</item>
-        <item>Último mês</item>
     </string-array>
 
     <string-array name="time_range_values">
         <item>r3600</item>
         <item>r86400</item>
         <item>r604800</item>
-        <item>r2592000</item>
     </string-array>
 
     <string-array name="countries">

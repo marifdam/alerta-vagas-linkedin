@@ -11,11 +11,9 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class JobNotifier {
     private static final String CHANNEL_ID = "vagas_linkedin";
-    private static final AtomicInteger NOTIF_ID = new AtomicInteger(0);
 
     public static void createChannel(Context ctx) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -34,9 +32,11 @@ public class JobNotifier {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(job.getUrl()));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        int id = NOTIF_ID.getAndIncrement();
+        // Usar um ID baseado no ID da vaga para evitar notificações duplicadas da mesma vaga na gaveta
+        int notificationId = job.getId().hashCode();
+        
         PendingIntent pendingIntent = PendingIntent.getActivity(
-            ctx, id, intent,
+            ctx, notificationId, intent,
             PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
         );
 
@@ -53,7 +53,7 @@ public class JobNotifier {
             .setContentIntent(pendingIntent);
 
         try {
-            NotificationManagerCompat.from(ctx).notify(id, builder.build());
+            NotificationManagerCompat.from(ctx).notify(notificationId, builder.build());
         } catch (SecurityException ignored) {
         }
     }
