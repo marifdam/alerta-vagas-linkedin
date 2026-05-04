@@ -80,37 +80,95 @@ public class LinkedInScraper {
     private List<Job> parseJobs(String html, String keyword) {
         List<Job> jobs = new ArrayList<>();
         Document doc = Jsoup.parse(html);
-        Elements items = doc.select("li");
+        // Seletor mais específico para evitar itens que não são vagas (propagandas, etc)
+        Elements items = doc.select(".base-search-card, .job-search-card");
 
-        for (Element li : items) {
-            String urn = li.select("[data-entity-urn]").attr("data-entity-urn");
-            String[] parts = urn.split(":");
-            if (parts.length == 0) continue;
-            String id = parts[parts.length - 1];
-            if (id.isEmpty() || !isNumeric(id)) continue;
+        for (Element item : items) {
+            // Tenta extrair o ID de forma mais robusta
+            String id = extractId(item);
+            if (id == null || id.isEmpty()) continue;
 
-            String title    = li.select(".base-search-card__title").text().trim();
-            String company  = li.select(".base-search-card__subtitle").text().trim();
-            String location = li.select(".job-search-card__location").text().trim();
-            String rawUrl   = li.select("a.base-card__full-link").attr("href");
+            String title    = item.select(".base-search-card__title").text().trim();
+            String company  = item.select(".base-search-card__subtitle").text().trim();
+            
+            if (title.isEmpty()) continue;
+
+            // Filtro para garantir que a vaga tem relação com a palavra-chave
+            // LinkedIn Guest Search costuma retornar muitas vagas "Recomendadas" sem relação
+            if (!matchesKeyword(title, company, keyword)) continue;
+
+            String location = item.select(".job-search-card__location").text().trim();
+            String rawUrl   = item.select("a.base-card__full-link").attr("href");
+            if (rawUrl.isEmpty()) {
+                rawUrl = item.select("a").attr("href");
+            }
             String jobUrl   = rawUrl.contains("?") ? rawUrl.substring(0, rawUrl.indexOf('?')) : rawUrl;
             
-            String timeAgo = li.select("time").text().trim();
+            String timeAgo = item.select("time").text().trim();
             if (timeAgo.isEmpty()) {
-                timeAgo = li.select(".job-search-card__listdate").text().trim();
+                timeAgo = item.select(".job-search-card__listdate").text().trim();
             }
             if (timeAgo.isEmpty()) {
-                timeAgo = li.select(".job-search-card__listdate--new").text().trim();
+                timeAgo = item.select(".job-search-card__listdate--new").text().trim();
             }
 
-            if (!title.isEmpty()) {
-                jobs.add(new Job(id, title, company, location, jobUrl, keyword, timeAgo));
-            }
+            jobs.add(new Job(id, title, company, location, jobUrl, keyword, timeAgo));
         }
         return jobs;
     }
 
+    private String extractId(Element element) {
+        // 1. Pelo atributo de URN
+        String urn = element.attr("data-entity-urn");
+        if (urn.isEmpty()) {
+            urn = element.select("[data-entity-urn]").attr("data-entity-urn");
+        }
+        if (!urn.isEmpty()) {
+            String[] parts = urn.split(":");
+            String id = parts[parts.length - 1];
+            if (isNumeric(id)) return id;
+        }
+
+        // 2. Pelo link (href)
+        String href = element.select("a").attr("href");
+        if (href.contains("/view/")) {
+            try {
+                String sub = href.substring(href.indexOf("/view/") + 6);
+                int end = sub.indexOf('/') != -1 ? sub.indexOf('/') : (sub.indexOf('?') != -1 ? sub.indexOf('?') : sub.length());
+                String id = sub.substring(0, end);
+                if (isNumeric(id)) return id;
+            } catch (Exception ignored) {}
+        }
+        
+        // 3. Pelo atributo data-id (comum em alguns layouts)
+        String dataId = element.attr("data-id");
+        if (isNumeric(dataId)) return dataId;
+
+        return "";
+    }
+
+    private boolean matchesKeyword(String title, String company, String keyword) {
+        String lowerTitle = title.toLowerCase();
+        String lowerCompany = company.toLowerCase();
+        String lowerKw = keyword.toLowerCase();
+
+        // Se a palavra-chave está no título ou empresa, é match direto
+        if (lowerTitle.contains(lowerKw) || lowerCompany.contains(lowerKw)) return true;
+
+        // Para palavras compostas (ex: "Desenvolvedor Java"), verifica se os termos principais aparecem
+        String[] terms = lowerKw.split("\\s+");
+        if (terms.length > 1) {
+            for (String term : terms) {
+                if (term.length() <= 2) continue; // ignora "de", "e", etc
+                if (lowerTitle.contains(term)) return true;
+            }
+        }
+
+        return false;
+    }
+
     private boolean isNumeric(String s) {
+        if (s == null || s.isEmpty()) return false;
         for (char c : s.toCharArray()) if (!Character.isDigit(c)) return false;
         return true;
     }
