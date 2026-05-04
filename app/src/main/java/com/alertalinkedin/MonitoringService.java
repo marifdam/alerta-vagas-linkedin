@@ -22,6 +22,7 @@ public class MonitoringService extends Service {
 
     private static final int    FOREGROUND_NOTIF_ID = 1;
     private static final String FOREGROUND_CHANNEL  = "monitor_running";
+    private static final String ACTION_REPOST       = "com.alertalinkedin.ACTION_REPOST_FOREGROUND";
 
     private volatile boolean running = false;
     private Thread monitorThread;
@@ -49,20 +50,26 @@ public class MonitoringService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         startForeground(FOREGROUND_NOTIF_ID, buildForegroundNotification());
 
-        running = true;
-        monitorThread = new Thread(() -> {
-            while (running && !Thread.currentThread().isInterrupted()) {
-                checkJobs();
-                try {
-                    long ms = PrefsManager.getIntervalMinutes(this) * 60_000L;
-                    Thread.sleep(ms);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
+        if (ACTION_REPOST.equals(intent != null ? intent.getAction() : null)) {
+            return START_STICKY;
+        }
+
+        if (!running) {
+            running = true;
+            monitorThread = new Thread(() -> {
+                while (running && !Thread.currentThread().isInterrupted()) {
+                    checkJobs();
+                    try {
+                        long ms = PrefsManager.getIntervalMinutes(this) * 60_000L;
+                        Thread.sleep(ms);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
                 }
-            }
-        });
-        monitorThread.start();
+            });
+            monitorThread.start();
+        }
 
         return START_STICKY;
     }
@@ -160,16 +167,24 @@ public class MonitoringService extends Service {
         PendingIntent pi = PendingIntent.getActivity(
             this, 0, open, PendingIntent.FLAG_IMMUTABLE);
 
+        Intent repost = new Intent(this, MonitoringService.class);
+        repost.setAction(ACTION_REPOST);
+        PendingIntent deletePi = PendingIntent.getService(
+            this, 1, repost, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
         long interval = PrefsManager.getIntervalMinutes(this);
         String intervalText = interval == 1 ? "1 minuto" : interval + " minutos";
 
-        return new NotificationCompat.Builder(this, FOREGROUND_CHANNEL)
+        Notification n = new NotificationCompat.Builder(this, FOREGROUND_CHANNEL)
             .setSmallIcon(android.R.drawable.ic_menu_search)
             .setContentTitle("Monitorando vagas no LinkedIn")
             .setContentText("Verificando a cada " + intervalText)
             .setContentIntent(pi)
+            .setDeleteIntent(deletePi)
             .setOngoing(true)
             .setSilent(true)
             .build();
+        n.flags |= Notification.FLAG_NO_CLEAR;
+        return n;
     }
 }

@@ -49,7 +49,7 @@ public class JobNotifier {
             .setStyle(new NotificationCompat.BigTextStyle()
                 .bigText(job.getCompany() + "\n" + job.getLocation() + time + "\nBusca: " + job.getKeyword()))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
+            .setOngoing(true)
             .setContentIntent(pendingIntent);
 
         try {
