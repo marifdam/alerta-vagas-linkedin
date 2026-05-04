@@ -1,0 +1,5 @@
+-keep class okhttp3.** { *; }
+-keep class org.jsoup.** { *; }
+-dontwarn okhttp3.**
+-dontwarn org.jsoup.**
+-dontwarn org.slf4j.**

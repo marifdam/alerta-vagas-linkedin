@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Alerta Vagas Linkedin</string>
+
+    <string-array name="time_range_labels">
+        <item>Última hora</item>
+        <item>Último dia</item>
+        <item>Última semana</item>
+        <item>Último mês</item>
+    </string-array>
+
+    <string-array name="time_range_values">
+        <item>r3600</item>
+        <item>r86400</item>
+        <item>r604800</item>
+        <item>r2592000</item>
+    </string-array>
+
+    <string-array name="countries">
+        <item>Brasil</item>
+        <item>Portugal</item>
+        <item>Estados Unidos</item>
+        <item>Reino Unido</item>
+        <item>Canadá</item>
+        <item>Alemanha</item>
+        <item>França</item>
+        <item>Espanha</item>
+        <item>Países Baixos</item>
+        <item>Irlanda</item>
+        <item>Austrália</item>
+        <item>Argentina</item>
+        <item>México</item>
+        <item>Remote</item>
+    </string-array>
+</resources>

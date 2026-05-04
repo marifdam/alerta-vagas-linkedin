@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Circular blue background -->
+    <path
+        android:fillColor="#0077B5"
+        android:pathData="M24,0 C37.25,0 48,10.75 48,24 C48,37.25 37.25,48 24,48 C10.75,48 0,37.25 0,24 C0,10.75 10.75,0 24,0 Z" />
+
+    <!-- Magnifying glass ring -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M8,20 C8,13.37 13.37,8 20,8 C26.63,8 32,13.37 32,20 C32,26.63 26.63,32 20,32 C13.37,32 8,26.63 8,20 Z M27.5,20 C27.5,15.86 24.14,12.5 20,12.5 C15.86,12.5 12.5,15.86 12.5,20 C12.5,24.14 15.86,27.5 20,27.5 C24.14,27.5 27.5,24.14 27.5,20 Z" />
+
+    <!-- Handle -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:pathData="M29,29 L40,40" />
+
+</vector>

@@ -1,0 +1,33 @@
+R_DEF: Internal format may change without notice
+local
+array countries
+array time_range_labels
+array time_range_values
+color linkedin_blue
+color linkedin_dark
+color switch_track
+drawable ic_launcher_background
+drawable ic_launcher_foreground
+id action_settings
+id countrySpinner
+id deleteButton
+id emptyView
+id fabAdd
+id intervalSpinner
+id keywordInput
+id keywordText
+id monitorSwitch
+id recyclerKeywords
+id statusSubText
+id statusText
+id timeRangeSpinner
+id toolbar
+layout activity_main
+layout dialog_add_keyword
+layout dialog_settings
+layout item_keyword
+menu main_menu
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+style Theme.AlertaLinkedin

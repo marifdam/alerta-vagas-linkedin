@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="countries">
+        <item>Brasil</item>
+        <item>Portugal</item>
+        <item>Estados Unidos</item>
+        <item>Reino Unido</item>
+        <item>Canadá</item>
+        <item>Alemanha</item>
+        <item>França</item>
+        <item>Espanha</item>
+        <item>Países Baixos</item>
+        <item>Irlanda</item>
+        <item>Austrália</item>
+        <item>Argentina</item>
+        <item>México</item>
+        <item>Remote</item>
+    </string-array>
+    <string-array name="time_range_labels">
+        <item>Última hora</item>
+        <item>Último dia</item>
+        <item>Última semana</item>
+        <item>Último mês</item>
+    </string-array>
+    <string-array name="time_range_values">
+        <item>r3600</item>
+        <item>r86400</item>
+        <item>r604800</item>
+        <item>r2592000</item>
+    </string-array>
+    <color name="linkedin_blue">#0077B5</color>
+    <color name="linkedin_dark">#005885</color>
+    <color name="switch_track">#80B3D4</color>
+    <string name="app_name">Alerta Vagas Linkedin</string>
+    <style name="Theme.AlertaLinkedin" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/linkedin_blue</item>
+        <item name="colorPrimaryDark">@color/linkedin_dark</item>
+        <item name="colorAccent">@color/linkedin_blue</item>
+    </style>
+</resources>

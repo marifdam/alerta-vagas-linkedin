@@ -1,0 +1,5 @@
+com.alertalinkedin.test.app-androidTest-0 C:\Users\mfd27\IdeaProjects\alerta linkedin\app\build\generated\res\resValues\androidTest\debug
+com.alertalinkedin.test.app-updated_navigation_xml-1 C:\Users\mfd27\IdeaProjects\alerta linkedin\app\build\generated\updated_navigation_xml\debugAndroidTest
+com.alertalinkedin.test.app-mergeDebugAndroidTestResources-2 C:\Users\mfd27\IdeaProjects\alerta linkedin\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.alertalinkedin.test.app-mergeDebugAndroidTestResources-3 C:\Users\mfd27\IdeaProjects\alerta linkedin\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.alertalinkedin.test.app-debugAndroidTest-4 C:\Users\mfd27\IdeaProjects\alerta linkedin\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
